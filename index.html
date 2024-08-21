@@ -1,12 +1,133 @@
-<!DOCTYPE html><html><head><title>Blank Page Checker</title><style>body{font-family:"Arial",sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background-color:#f5f5f5;font-family:"Open Sans",sans-serif}.container{display:grid;grid-template-columns:1fr 2fr;gap:20px}.form-container{background-color:#fff;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);text-align:center}
-h1{color:#333;margin-bottom:20px}
-label{display:block;margin-bottom:10px;font-weight:600}
-textarea{width:90%;padding:15px;margin-bottom:20px;border:1px solid #ddd;border-radius:5px;font-size:16px}
-button{background:linear-gradient(to right,#ff416c,#225cfd);color:white;border:none;font-size:18px;border-radius:5px;width:200px;padding:10px;cursor:pointer}
-#results{background-color:#f5f5f5;padding:20px;border-radius:5px;margin-top:20px;max-height:350px;overflow-y:scroll}
-#results a{display:inline-block;background-color:#fff;padding:10px 15px;margin:5px 0;margin-right:20px;border:1px solid #ddd;border-radius:5px;text-decoration:none;color:#333}</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"/></head><body><div class="container"><div class="form-container"><h1>Blank Page Checker</h1><label for="urlInput">Paste your URLs(one per line):</label><textarea id="urlInput"></textarea><button id="checkButton">Check Pages</button></div><div id="results"></div></div><script>async function fetchPageContent(url){try{const response=await fetch(url);if(!response.ok){throw new Error(`Error fetching ${url}: ${response.status}`)}
-return await response.text()}catch(error){console.error("Error fetching page:",error);return null}}
-function handleFetchedPage(htmlContent,url){const tempDiv=document.createElement("div");tempDiv.innerHTML=htmlContent;const requiredClasses=["SupportPDP-list","SupportPDP__downloads-items","text","press-release-detail"];const hasRequiredClasses=requiredClasses.some((className)=>{return tempDiv.querySelector(`.${className}`)});return hasRequiredClasses}
-async function checkUrlsForBlankPages(){const urlInput=document.getElementById("urlInput");const resultsDiv=document.getElementById("results");resultsDiv.innerHTML="";const urls=urlInput.value.trim().split("\n");for(const url of urls){const content=await fetchPageContent(url);const result=document.createElement("a");result.href=url;if(content!==null){const hasRequiredClasses=handleFetchedPage(content,url);result.textContent=`${url} page is ${hasRequiredClasses ? "NOT blank" : "blank"}`;result.style.color=hasRequiredClasses?"green":"red"}else{result.textContent=`${url}  page is redirected`;result.style.color="blue"}
-resultsDiv.appendChild(result);resultsDiv.appendChild(document.createElement("br"));result.href=url;result.target="_blank"}}
-document.getElementById("checkButton").addEventListener("click",checkUrlsForBlankPages);</script></body></html>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blank Page Checker</title>
+        <style>
+            body {
+                font-family: "Arial", sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f5f5f5;
+                font-family: "Open Sans", sans-serif;
+            }
+            .container {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                gap: 20px;
+            }
+            .form-container {
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+            h1 {
+                color: #333;
+                margin-bottom: 20px;
+            }
+            label {
+                display: block;
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+            textarea {
+                width: 90%;
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            button {
+                background: linear-gradient(to right, #ff416c, #225cfd);
+                color: white;
+                border: none;
+                font-size: 18px;
+                border-radius: 5px;
+                width: 200px;
+                padding: 10px;
+                cursor: pointer;
+            }
+            #results {
+                background-color: #f5f5f5;
+                padding: 20px;
+                border-radius: 5px;
+                margin-top: 20px;
+                max-height: 350px;
+                overflow-y: scroll;
+            }
+            #results a {
+                display: inline-block;
+                background-color: #fff;
+                padding: 10px 15px;
+                margin: 5px 0;
+                margin-right: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                text-decoration: none;
+                color: #333;
+            }
+        </style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-container">
+                <h1>Blank Page Checker</h1>
+                <label for="urlInput">Paste your URLs(one per line):</label><textarea id="urlInput"></textarea><button id="checkButton">Check Pages</button>
+            </div>
+            <div id="results"></div>
+        </div>
+        <script>
+            async function fetchPageContent(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Error fetching ${url}: ${response.status}`);
+                    }
+                    return await response.text();
+                } catch (error) {
+                    console.error("Error fetching page:", error);
+                    return null;
+                }
+            }
+            function handleFetchedPage(htmlContent, url) {
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = htmlContent;
+                const requiredClasses = ["SupportPDP-list", "SupportPDP__downloads-items", "text", "press-release-detail"];
+                const hasRequiredClasses = requiredClasses.some((className) => {
+                    return tempDiv.querySelector(`.${className}`);
+                });
+                return hasRequiredClasses;
+            }
+            async function checkUrlsForBlankPages() {
+                const urlInput = document.getElementById("urlInput");
+                const resultsDiv = document.getElementById("results");
+                resultsDiv.innerHTML = "";
+                const urls = urlInput.value.trim().split("\n");
+                for (const url of urls) {
+                    const content = await fetchPageContent(url);
+                    const result = document.createElement("a");
+                    result.href = url;
+                    if (content !== null) {
+                        const hasRequiredClasses = handleFetchedPage(content, url);
+                        result.textContent = `${url} page is ${hasRequiredClasses ? "NOT blank" : "blank"}`;
+                        result.style.color = hasRequiredClasses ? "green" : "red";
+                    } else {
+                        result.textContent = `${url}  page is redirected`;
+                        result.style.color = "blue";
+                    }
+                    resultsDiv.appendChild(result);
+                    resultsDiv.appendChild(document.createElement("br"));
+                    result.href = url;
+                    result.target = "_blank";
+                }
+            }
+            document.getElementById("checkButton").addEventListener("click", checkUrlsForBlankPages);
+        </script>
+    </body>
+</html>
